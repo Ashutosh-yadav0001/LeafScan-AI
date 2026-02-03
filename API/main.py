@@ -22,7 +22,7 @@ if os.environ.get('WEBSITE_SITE_NAME'):  # Running on Azure
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if not allow_origin_regex else ["*"],
+    allow_origins=[] if allow_origin_regex else origins,
     allow_origin_regex=allow_origin_regex,
     allow_credentials=True,
     allow_methods=["*"],

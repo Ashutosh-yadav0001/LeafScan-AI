@@ -19,12 +19,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy API code
 COPY API/ ./API/
 
-# Copy model files if they exist
-# Using a shell script to handle optional files
-RUN mkdir -p /app/saved_models /app/Training
-COPY saved_models/ ./saved_models/ || true
-COPY Training/ ./Training/ || true
-COPY potatoes.h5 . || true
+# Copy model files
+# Note: These directories/files are required for the application to work
+# Ensure they exist in your build context before building this image
+# If they don't exist, the build will fail - this is intentional
+COPY saved_models/ ./saved_models/
+COPY potatoes.h5 ./
+
+# Training directory is optional for runtime
+RUN mkdir -p ./Training
 
 # Set working directory to API
 WORKDIR /app/API

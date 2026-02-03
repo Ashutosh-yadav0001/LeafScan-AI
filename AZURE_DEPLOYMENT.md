@@ -195,8 +195,8 @@ az acr create \
 az acr login --name $ACR_NAME
 
 # Build and push backend image
-cd /path/to/Pototo-disease
-docker build -t $ACR_NAME.azurecr.io/potato-backend:latest -f Dockerfile .
+cd /path/to/Potato-disease
+docker build -t $ACR_NAME.azurecr.io/potato-backend:latest -f Dockerfile.azure .
 docker push $ACR_NAME.azurecr.io/potato-backend:latest
 ```
 
