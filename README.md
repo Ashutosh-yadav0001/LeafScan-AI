@@ -191,6 +191,32 @@ Just upload any of these to the frontend and see the prediction.
 
 **Image Not Working:** Make sure the image is a proper photo of a potato leaf. The model rejects images that are too dark, too bright, or dont look like leaves.
 
+## Deployment on Azure ☁️
+
+Want to deploy this project on Microsoft Azure? We've got you covered!
+
+Check out our comprehensive **[Azure Deployment Guide](AZURE_DEPLOYMENT.md)** for step-by-step instructions on:
+
+- 🚀 Deploying with Azure App Service
+- 🐳 Deploying with Azure Container Registry and Container Instances
+- 🔄 Setting up CI/CD with GitHub Actions
+- 📊 Monitoring and logging
+- 💰 Cost estimation
+- 🔧 Troubleshooting common issues
+
+The guide includes multiple deployment options suitable for different needs and budgets, from quick deployments for testing to production-ready setups with auto-scaling.
+
+**Quick Start:**
+```bash
+# Login to Azure
+az login
+
+# Deploy using Azure CLI (see full guide for details)
+az webapp up --runtime PYTHON:3.9 --sku B1
+```
+
+For complete instructions, see [AZURE_DEPLOYMENT.md](AZURE_DEPLOYMENT.md)
+
 ## Note
 
 This project was made for learning purposes. The model works well on the test dataset but may not be 100% accurate on all real world images. Always consult an agricultural expert for proper diagnosis.

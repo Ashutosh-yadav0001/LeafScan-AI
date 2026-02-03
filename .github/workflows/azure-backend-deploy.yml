@@ -1,0 +1,60 @@
+name: Deploy Backend to Azure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'API/**'
+      - 'requirements.txt'
+      - 'Dockerfile.azure'
+      - '.github/workflows/azure-backend-deploy.yml'
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: potato-disease-backend
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Create deployment package
+      run: |
+        mkdir deploy
+        cp -r API deploy/
+        cp -r saved_models deploy/ 2>/dev/null || echo "No saved_models directory"
+        cp -r Training deploy/ 2>/dev/null || echo "No Training directory"
+        cp requirements.txt deploy/
+        cp potatoes.h5 deploy/ 2>/dev/null || echo "No potatoes.h5 file"
+        cd deploy && zip -r ../deploy.zip . && cd ..
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_BACKEND_NAME }}
+        package: deploy.zip
+
+    - name: Logout from Azure
+      run: az logout

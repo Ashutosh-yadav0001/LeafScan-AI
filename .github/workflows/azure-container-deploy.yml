@@ -1,0 +1,120 @@
+name: Deploy to Azure Container Registry
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  ACR_NAME: potatodiseaseacr
+  BACKEND_IMAGE: potato-backend
+  FRONTEND_IMAGE: potato-frontend
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Login to Azure Container Registry
+      run: |
+        az acr login --name ${{ secrets.ACR_NAME }}
+
+    - name: Build and push backend image
+      run: |
+        docker build -f Dockerfile.azure -t ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.BACKEND_IMAGE }}:latest .
+        docker tag ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.BACKEND_IMAGE }}:latest \
+                   ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+        docker push ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.BACKEND_IMAGE }}:latest
+        docker push ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+
+    - name: Build and push frontend image
+      working-directory: ./frontend
+      run: |
+        docker build -f Dockerfile.production -t ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.FRONTEND_IMAGE }}:latest .
+        docker tag ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.FRONTEND_IMAGE }}:latest \
+                   ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+        docker push ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.FRONTEND_IMAGE }}:latest
+        docker push ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+
+    - name: Logout from Azure
+      run: az logout
+
+  deploy-containers:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy backend container
+      run: |
+        az container create \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --name potato-backend-container \
+          --image ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.BACKEND_IMAGE }}:latest \
+          --registry-login-server ${{ secrets.ACR_NAME }}.azurecr.io \
+          --registry-username ${{ secrets.ACR_USERNAME }} \
+          --registry-password ${{ secrets.ACR_PASSWORD }} \
+          --dns-name-label potato-backend-${{ secrets.UNIQUE_ID }} \
+          --ports 8000 \
+          --cpu 2 \
+          --memory 4 \
+          --restart-policy Always \
+          || az container restart \
+               --resource-group ${{ secrets.RESOURCE_GROUP }} \
+               --name potato-backend-container
+
+    - name: Get backend URL
+      id: backend-url
+      run: |
+        BACKEND_FQDN=$(az container show \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --name potato-backend-container \
+          --query ipAddress.fqdn \
+          --output tsv)
+        echo "backend_url=http://${BACKEND_FQDN}:8000" >> $GITHUB_OUTPUT
+
+    - name: Deploy frontend container
+      run: |
+        az container create \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --name potato-frontend-container \
+          --image ${{ secrets.ACR_NAME }}.azurecr.io/${{ env.FRONTEND_IMAGE }}:latest \
+          --registry-login-server ${{ secrets.ACR_NAME }}.azurecr.io \
+          --registry-username ${{ secrets.ACR_USERNAME }} \
+          --registry-password ${{ secrets.ACR_PASSWORD }} \
+          --dns-name-label potato-frontend-${{ secrets.UNIQUE_ID }} \
+          --ports 80 \
+          --environment-variables BACKEND_URL=${{ steps.backend-url.outputs.backend_url }} \
+          --restart-policy Always \
+          || az container restart \
+               --resource-group ${{ secrets.RESOURCE_GROUP }} \
+               --name potato-frontend-container
+
+    - name: Get deployment URLs
+      run: |
+        echo "Backend URL: ${{ steps.backend-url.outputs.backend_url }}"
+        FRONTEND_FQDN=$(az container show \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --name potato-frontend-container \
+          --query ipAddress.fqdn \
+          --output tsv)
+        echo "Frontend URL: http://${FRONTEND_FQDN}"
+
+    - name: Logout from Azure
+      run: az logout

@@ -10,13 +10,19 @@ import os
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:3000",
-]
+# Allow origins from environment variable for Azure deployment
+allowed_origins = os.environ.get('CORS_ORIGINS', 'http://localhost,http://localhost:3000')
+origins = [origin.strip() for origin in allowed_origins.split(',')]
+
+# Add common Azure patterns if not in production
+if os.environ.get('WEBSITE_SITE_NAME'):  # Running on Azure
+    # Allow all Azure App Service domains
+    origins.append("https://*.azurewebsites.net")
+    origins.append("http://*.azurewebsites.net")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins if origins else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -181,4 +187,7 @@ async def predict_tomato(file: UploadFile = File(...)):
     return await predict(file=file, plant_type="tomato")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host='localhost', port=8000)
+    # Get port from environment variable (for Azure deployment) or default to 8000
+    port = int(os.environ.get('PORT', 8000))
+    # Use 0.0.0.0 to allow external connections (required for Azure)
+    uvicorn.run(app, host='0.0.0.0', port=port)

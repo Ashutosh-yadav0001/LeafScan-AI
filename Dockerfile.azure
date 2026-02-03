@@ -1,0 +1,44 @@
+# Azure-optimized Backend Dockerfile
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy API code
+COPY API/ ./API/
+
+# Copy model files
+COPY saved_models/ ./saved_models/ 2>/dev/null || true
+COPY Training/ ./Training/ 2>/dev/null || true
+COPY potatoes.h5 . 2>/dev/null || true
+
+# Set working directory to API
+WORKDIR /app/API
+
+# Create a non-root user for security
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# Expose port (Azure will set PORT environment variable)
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD python -c "import requests; requests.get('http://localhost:8000/ping')" || exit 1
+
+# Start the application
+# Azure App Service will override this with the PORT environment variable
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
