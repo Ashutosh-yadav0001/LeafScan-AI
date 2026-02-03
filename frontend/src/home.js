@@ -19,6 +19,8 @@ import {
   ListItemIcon,
   Chip,
   Paper,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import {
   Clear,
@@ -216,6 +218,7 @@ export const ImageUpload = () => {
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [plantType, setPlantType] = useState("potato");
 
   useEffect(() => {
     setHistory(getHistory());
@@ -231,7 +234,7 @@ export const ImageUpload = () => {
 
     try {
       const res = await axios.post(
-        process.env.REACT_APP_API_URL || "http://localhost:8000/predict",
+        `/predict?plant_type=${plantType}`,
         formData
       );
       if (res.status === 200) {
@@ -247,7 +250,7 @@ export const ImageUpload = () => {
       }
     }
     setIsLoading(false);
-  }, []);
+  }, [plantType]);
 
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -328,12 +331,40 @@ export const ImageUpload = () => {
         <Grid container direction="column" alignItems="center" spacing={3}>
           <Grid item>
             <Typography sx={styles.heroTitle}>
-              Protect Your <span>Potato Crops</span>
+              Protect Your <span>{plantType === "potato" ? "Potato" : "Tomato"} Crops</span>
             </Typography>
             <Typography sx={styles.heroSubtitle}>
-              Upload a photo of your potato plant leaf and our AI will instantly
-              detect Early Blight, Late Blight, or confirm it's healthy.
+              Upload a photo of your {plantType} plant leaf and our AI will instantly
+              detect diseases or confirm it's healthy.
             </Typography>
+
+            {/* Plant Type Selector */}
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+              <ToggleButtonGroup
+                value={plantType}
+                exclusive
+                onChange={(e, newValue) => { if (newValue) { setPlantType(newValue); clearData(); } }}
+                sx={{
+                  background: "rgba(255,255,255,0.1)",
+                  borderRadius: "12px",
+                  "& .MuiToggleButton-root": {
+                    color: "rgba(255,255,255,0.7)",
+                    border: "none",
+                    px: 3,
+                    py: 1,
+                    textTransform: "none",
+                    fontWeight: 600,
+                    "&.Mui-selected": {
+                      background: "linear-gradient(135deg, #10b981, #34d399)",
+                      color: "#fff",
+                    },
+                  },
+                }}
+              >
+                <ToggleButton value="potato">🥔 Potato</ToggleButton>
+                <ToggleButton value="tomato">🍅 Tomato</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
           </Grid>
 
           <Grid item sx={{ width: "100%", maxWidth: 500 }}>
@@ -346,7 +377,7 @@ export const ImageUpload = () => {
                     <Typography sx={{ color: "rgba(255,255,255,0.7)", textAlign: "center" }}>
                       {isDragActive
                         ? "Drop the image here..."
-                        : "Drag & drop a potato leaf image here, or click to select"}
+                        : `Drag & drop a ${plantType} leaf image here, or click to select`}
                     </Typography>
                   </Box>
                 )}

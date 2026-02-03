@@ -1,0 +1,38 @@
+================================================================================
+                    GPU SETUP FOR TENSORFLOW - QUICK REFERENCE
+================================================================================
+
+RULE #1: Version Matching
+-------------------------
+TensorFlow 2.10.x  →  CUDA 11.2  →  cuDNN 8.x
+TensorFlow 2.15.x  →  CUDA 12.x  →  cuDNN 8.9+
+
+If GPU not detected = VERSION MISMATCH!
+
+
+QUICK CHECK COMMANDS:
+--------------------
+nvidia-smi                    # Check GPU driver
+nvcc --version                # Check CUDA version  
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+
+
+QUICK FIX (if GPU not detected):
+--------------------------------
+1. pip install nvidia-cudnn-cu11
+2. Copy DLLs to CUDA folder (as Admin):
+   Copy from: C:\Users\YOUR_USER\...\site-packages\nvidia\cudnn\bin\*.dll
+   Copy to:   C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin\
+
+3. Downgrade TensorFlow if needed:
+   pip install tensorflow==2.10.1
+
+
+YOUR WORKING SETUP:
+------------------
+GPU: RTX 3050 (4GB)
+CUDA: 11.2
+cuDNN: 8.9
+TensorFlow: 2.10.1
+
+================================================================================
