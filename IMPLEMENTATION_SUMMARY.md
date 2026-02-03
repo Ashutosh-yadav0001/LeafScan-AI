@@ -224,7 +224,7 @@ terraform apply
 ## File Structure
 
 ```
-Pototo-disease/
+Potato-disease/
 ├── .azure/
 │   ├── config                          # Azure App Service config
 │   └── startup.sh                      # Startup script

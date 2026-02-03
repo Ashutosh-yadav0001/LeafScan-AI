@@ -14,15 +14,16 @@ app = FastAPI()
 allowed_origins = os.environ.get('CORS_ORIGINS', 'http://localhost,http://localhost:3000')
 origins = [origin.strip() for origin in allowed_origins.split(',')]
 
-# Add common Azure patterns if not in production
+# For Azure deployment, use allow_origin_regex for wildcard patterns
+allow_origin_regex = None
 if os.environ.get('WEBSITE_SITE_NAME'):  # Running on Azure
-    # Allow all Azure App Service domains
-    origins.append("https://*.azurewebsites.net")
-    origins.append("http://*.azurewebsites.net")
+    # Allow all Azure App Service domains using regex
+    allow_origin_regex = r"https?://.*\.azurewebsites\.net"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins else ["*"],
+    allow_origins=origins if not allow_origin_regex else ["*"],
+    allow_origin_regex=allow_origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

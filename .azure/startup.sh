@@ -10,7 +10,7 @@ cd /home/site/wwwroot/API || cd /app/API
 python -m pip install --upgrade pip
 
 # Install requirements
-pip install -r ../requirements.txt || pip install -r requirement.txt
+pip install -r ../requirements.txt || pip install -r requirements.txt
 
 # Start the application
 # Azure sets the PORT environment variable

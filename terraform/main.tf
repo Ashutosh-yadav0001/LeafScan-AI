@@ -35,6 +35,13 @@ variable "environment" {
   default     = "production"
 }
 
+# Random string for unique names (must be defined before usage)
+resource "random_string" "unique" {
+  length  = 8
+  special = false
+  upper   = false
+}
+
 # Resource Group
 resource "azurerm_resource_group" "main" {
   name     = "${var.project_name}-${var.environment}-rg"
@@ -126,13 +133,6 @@ resource "azurerm_linux_web_app" "frontend" {
   }
 }
 
-# Random string for unique names
-resource "random_string" "unique" {
-  length  = 8
-  special = false
-  upper   = false
-}
-
 # Application Insights for monitoring
 resource "azurerm_application_insights" "main" {
   name                = "${var.project_name}-insights"
@@ -159,6 +159,16 @@ output "backend_url" {
 output "frontend_url" {
   value       = "https://${azurerm_linux_web_app.frontend.default_hostname}"
   description = "The URL of the frontend application"
+}
+
+output "backend_app_name" {
+  value       = azurerm_linux_web_app.backend.name
+  description = "The name of the backend web app"
+}
+
+output "frontend_app_name" {
+  value       = azurerm_linux_web_app.frontend.name
+  description = "The name of the frontend web app"
 }
 
 output "application_insights_instrumentation_key" {
