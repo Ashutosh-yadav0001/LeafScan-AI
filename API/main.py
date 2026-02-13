@@ -41,7 +41,7 @@ if os.path.exists(TOMATO_MODEL_PATH):
     print("✅ Tomato model loaded")
 else:
     TOMATO_MODEL = None
-    print("⚠️ Tomato model not found")
+    print("Tomato model not found")
 
 # Class names for each model
 POTATO_CLASSES = ["Early Blight", "Late Blight", "Healthy"]
@@ -88,10 +88,10 @@ def read_file_as_image(data) -> np.ndarray:
     return np.array(image)
 
 def is_valid_leaf_image(image: np.ndarray) -> tuple[bool, str]:
-    """
-    Basic validation to check if image might be a leaf.
-    Returns (is_valid, error_message)
-    """
+    '''
+    Check if the uploaded image is valid.
+    It should be an RGB image and not too dark or bright.
+    '''
     if len(image.shape) != 3 or image.shape[2] != 3:
         return False, "Invalid image format. Please upload a color image."
     
@@ -114,10 +114,9 @@ async def predict(
         file: UploadFile = File(...),
         plant_type: str = "potato"
 ):
-    """
-    Predict disease from leaf image.
-    plant_type: 'potato' or 'tomato'
-    """
+    '''
+    Function to predict the disease.
+    '''
     # Validate plant type
     plant_type = plant_type.lower()
     if plant_type not in ["potato", "tomato"]:
@@ -151,18 +150,18 @@ async def predict(
         model = TOMATO_MODEL
         class_names = TOMATO_CLASSES
     
-    print(f"🔍 Predicting with {plant_type} model, {len(class_names)} classes")
+    print(f"Predicting with {plant_type} model...")
     predictions = model.predict(img_batch)
     
     predicted_class = class_names[np.argmax(predictions[0])]
     confidence = float(np.max(predictions[0]))
-    print(f"📊 Result: {predicted_class} ({confidence*100:.1f}%)")
+    print(f"Result: {predicted_class} ({confidence*100:.1f}%)")
     
     # Check if confidence is above threshold
     if confidence < CONFIDENCE_THRESHOLD:
         raise HTTPException(
             status_code=400, 
-            detail=f"This doesn't look like a {plant_type} leaf 🌿 Please upload a clear photo of a {plant_type} plant leaf."
+            detail=f"This doesn't look like a {plant_type} leaf. Please upload a clear photo."
         )
     
     return {
