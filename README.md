@@ -1,88 +1,251 @@
-# Potato & Tomato Disease Classification 🌿
+# 🌿 LeafScan AI — Plant Disease Detection
 
-A simple and effective web application to detect diseases in potato and tomato leaves using Deep Learning.
+A full-stack web application that uses Deep Learning (CNN) to detect diseases in **Potato** and **Tomato** leaves from a simple photo upload.
 
-## 📌 Overview
-This project helps farmers and gardeners identify plant diseases by simply uploading a photo of a leaf. The system analyzes the image using a Convolutional Neural Network (CNN) and predicts whether the plant is **Healthy** or suffering from diseases like **Early Blight** or **Late Blight**.
+> Built with TensorFlow, FastAPI, and React.
 
-### ✨ Key Features
-- **Dual Plant Support**: Works for both Potato and Tomato plants.
-- **Easy to Use**: Simple drag-and-drop interface.
-- **Fast & Accurate**: Powered by TensorFlow for quick results.
+---
+
+## 📸 What It Does
+
+Upload a photo of a potato or tomato leaf → the AI instantly tells you:
+- ✅ **Healthy** — your plant looks good
+- ⚠️ **Disease Detected** — identifies the specific disease with confidence %
+
+### Supported Diseases
+
+| Potato (3 classes) | Tomato (10 classes) |
+|---|---|
+| Early Blight | Bacterial Spot |
+| Late Blight | Early Blight |
+| Healthy | Healthy |
+| | Late Blight |
+| | Leaf Mold |
+| | Septoria Leaf Spot |
+| | Spider Mites (Two-spotted) |
+| | Target Spot |
+| | Tomato Mosaic Virus |
+| | Yellow Leaf Curl Virus |
+
+---
 
 ## 🛠️ Prerequisites
-Before running the project, make sure you have the following installed on your computer:
-- **Python** (version 3.8 or higher)
-- **Node.js** (version 14 or higher)
 
-## 🚀 How to Run the Project
+Make sure these are installed on your laptop before starting:
 
-Follow these steps to set up and run the application on your machine.
+| Tool | Version | Download |
+|---|---|---|
+| **Python** | 3.8 – 3.10 | [python.org](https://www.python.org/downloads/) |
+| **Node.js** | 14+ | [nodejs.org](https://nodejs.org/) |
+| **Git** | Any | [git-scm.com](https://git-scm.com/downloads) |
 
-### Step 1: Backend Setup (The Brain)
-The backend runs the AI model.
+> ⚠️ **Python 3.11+ users:** TensorFlow 2.10.1 does not support Python 3.11+. Use Python 3.10 or below.
 
-1.  Open your terminal or command prompt.
-2.  Navigate to the project folder:
-    ```bash
-    cd Pototo-disease__V2
-    ```
-3.  Go into the API folder:
-    ```bash
-    cd API
-    ```
-4.  Install the necessary Python libraries:
-    ```bash
-    pip install -r requirement.txt
-    ```
-5.  Start the Backend Server:
-    ```bash
-    python main.py
-    ```
-    You should see a message saying the server is running at `http://localhost:8000`.
+---
 
-### Step 2: Frontend Setup (The Interface)
-The frontend is the website you interact with.
+## 🚀 Quick Start (Step-by-Step)
 
-1.  Open a **new** terminal window (keep the backend running in the first one).
-2.  Navigate to the project folder and then to the frontend:
-    ```bash
-    cd Pototo-disease__V2/frontend
-    ```
-3.  Install the required packages (only needed the first time):
-    ```bash
-    npm install
-    ```
-4.  Start the Website:
-    ```bash
-    npm start
-    ```
-    The website should automatically open in your browser at `http://localhost:3000`.
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Ashutosh-yadav0001/Pototo-disease.git
+cd Pototo-disease
+```
+
+### 2. Set Up Python Environment (Recommended)
+
+Create a virtual environment to keep your system clean:
+
+**Windows (PowerShell):**
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+**Mac/Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs: TensorFlow, FastAPI, Uvicorn, Pillow, NumPy, etc.
+
+### 4. Start the Backend (API Server)
+
+Open a terminal and run:
+
+```bash
+cd API
+python main.py
+```
+
+You should see:
+```
+Loading models...
+✅ Potato model loaded from SavedModel
+✅ Tomato model loaded from SavedModel
+INFO:     Uvicorn running on http://localhost:8000
+```
+
+> 🟢 Keep this terminal open! The backend must stay running.
+
+### 5. Start the Frontend (Website)
+
+Open a **second terminal** and run:
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+The website will open automatically at **http://localhost:3000** 🎉
+
+---
+
+## 🎮 How to Use
+
+1. Open **http://localhost:3000** in your browser
+2. Select plant type: **🥔 Potato** or **🍅 Tomato**
+3. Drag & drop a leaf image (or click to browse)
+4. View the result: disease name + confidence percentage
+5. Check prediction history by expanding the "Recent Predictions" panel
+
+### API Documentation
+
+FastAPI provides interactive docs at: **http://localhost:8000/docs**
+
+You can test the API directly from the browser using the Swagger UI.
+
+---
+
+## 📂 Project Structure
+
+```
+Pototo-disease/
+│
+├── API/                          # Backend server
+│   ├── main.py                   # FastAPI app — loads models, handles predictions
+│   └── README.md                 # API-specific documentation
+│
+├── frontend/                     # React web application
+│   ├── src/
+│   │   ├── home.js               # Main page with upload, prediction, history
+│   │   ├── index.js              # App entry point
+│   │   └── index.css             # Global styles
+│   └── package.json              # Node.js dependencies
+│
+├── Training/                     # Model training notebooks
+│   ├── Training.ipynb            # Potato model training (Jupyter Notebook)
+│   ├── Training_Tomato.ipynb     # Tomato model training (50 epochs)
+│   └── PlantVillage/             # Training dataset (not included in repo)
+│
+├── saved_models/                 # Trained model weights
+│   ├── 1/                        # Potato model (SavedModel format)
+│   └── tomato/2/                 # Tomato model (SavedModel format)
+│
+├── sample_images/                # Test images for quick testing
+│   ├── early_blight_sample.jpg
+│   ├── healthy_sample.jpg
+│   └── late_blight_sample.jpg
+│
+├── docs/                         # Additional documentation
+│   └── GPU_SETUP_NOTES.txt       # GPU/CUDA setup reference
+│
+├── requirements.txt              # Python dependencies
+├── Dockerfile                    # Docker support for backend
+├── docker-compose.yml            # Docker Compose for full stack
+└── .gitignore
+```
+
+---
+
+## 🐳 Docker (Alternative Setup)
+
+If you prefer Docker over manual setup:
+
+```bash
+docker-compose up --build
+```
+
+This starts both backend (`:8000`) and frontend (`:3000`) automatically.
 
 ---
 
 ## ❓ Troubleshooting
 
-If you face any issues, here are some common fixes:
+### "OpenSSL Error" when running `npm start`
 
-*   **"OpenSSL Error" in Frontend**:
-    If you see an error about `digital envelope routines` when running `npm start`:
-    *   **Windows**: Run `$env:NODE_OPTIONS="--openssl-legacy-provider"` and then `npm start`.
-    *   **Mac/Linux**: Run `export NODE_OPTIONS=--openssl-legacy-provider` and then `npm start`.
+If you see `ERR_OSSL_EVP_UNSUPPORTED` or `digital envelope routines`:
 
-*   **"Tomato model not found"**:
-    The system will still work for Potatoes! This warning just means the tomato training file wasn't found in the expected folder, but the app will handle it gracefully.
+**Windows (PowerShell):**
+```powershell
+$env:NODE_OPTIONS="--openssl-legacy-provider"
+npm start
+```
 
-*   **Server not connecting?**:
-    Make sure you keep the **Backend terminal open** while using the website. If you close it, the website cannot make predictions.
+**Mac/Linux:**
+```bash
+export NODE_OPTIONS=--openssl-legacy-provider
+npm start
+```
+
+### "Tomato model not found"
+
+This means `saved_models/tomato/2/` is missing. The app will still work for potato predictions. To fix:
+- Make sure you cloned the full repository (including large files)
+- Or retrain the tomato model using `Training/Training_Tomato.ipynb`
+
+### Backend won't start / TensorFlow errors
+
+- Ensure you're using **Python 3.8–3.10** (not 3.11+)
+- Ensure TensorFlow is installed: `pip install tensorflow==2.10.1`
+- For GPU acceleration, see `docs/GPU_SETUP_NOTES.txt`
+
+### Frontend can't connect to backend
+
+- Make sure the backend is running in a separate terminal (`python main.py`)
+- The frontend proxies API calls to `http://localhost:8000` (configured in `package.json`)
 
 ---
 
-## 📂 Project Structure
-*   `API/`: Contains the Python code for the backend server (`main.py`).
-*   `frontend/`: Contains the React code for the website.
-*   `Training/`: Jupyter notebooks used to train the deep learning models.
-*   `saved_models/`: Where the trained models are stored.
+## 🧠 Model Details
+
+| | Potato Model | Tomato Model |
+|---|---|---|
+| **Architecture** | CNN (6 Conv2D layers) | CNN (6 Conv2D layers) |
+| **Input Size** | 256 × 256 px | 256 × 256 px |
+| **Classes** | 3 | 10 |
+| **Test Accuracy** | ~99% | ~89% |
+| **Framework** | TensorFlow 2.10 | TensorFlow 2.10 |
+| **Training Epochs** | 50 | 50 |
+| **Dataset** | PlantVillage | PlantVillage |
 
 ---
-*Created for a Deep Learning Project Assignment.*
+
+## 🔧 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Deep Learning** | TensorFlow / Keras (CNN) |
+| **Backend API** | FastAPI + Uvicorn |
+| **Frontend** | React 18 + Material UI 5 |
+| **Image Processing** | Pillow, NumPy |
+| **Deployment** | Docker + Docker Compose |
+
+---
+
+## 👤 Author
+
+**Ashutosh Yadav**
+- GitHub: [@Ashutosh-yadav0001](https://github.com/Ashutosh-yadav0001)
+
+---
+
+*Created as a Deep Learning academic project — B.Sc. (Hons) Data Science & AI*
