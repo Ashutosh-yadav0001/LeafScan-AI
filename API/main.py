@@ -35,10 +35,13 @@ else:
     print("✅ Potato model loaded from .h5 file")
 
 # Tomato model
-TOMATO_MODEL_PATH = "../Training/tomatoes.h5"
+TOMATO_MODEL_PATH = "../saved_models/tomato/2"
 if os.path.exists(TOMATO_MODEL_PATH):
     TOMATO_MODEL = tf.keras.models.load_model(TOMATO_MODEL_PATH)
-    print("✅ Tomato model loaded")
+    print("✅ Tomato model loaded from SavedModel")
+elif os.path.exists("../Training/tomatoes.h5"):
+    TOMATO_MODEL = tf.keras.models.load_model("../Training/tomatoes.h5")
+    print("✅ Tomato model loaded from .h5 file")
 else:
     TOMATO_MODEL = None
     print("Tomato model not found")
