@@ -10,7 +10,7 @@ python-multipart
 
 # Image Processing
 pillow
-numpy
+numpy<2
 matplotlib
 
 # TensorFlow Serving (optional)

@@ -13,6 +13,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "http://frontend:3000",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -183,4 +184,4 @@ async def predict_tomato(file: UploadFile = File(...)):
     return await predict(file=file, plant_type="tomato")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host='localhost', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
