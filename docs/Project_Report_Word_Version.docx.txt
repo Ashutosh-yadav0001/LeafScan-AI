@@ -15,7 +15,7 @@ ABSTRACT
 
 This report presents a deep learning-based approach for automated classification of plant leaf diseases in potato and tomato crops. Agricultural productivity is significantly impacted by plant diseases, causing substantial economic losses worldwide. Early and accurate detection is crucial for effective crop management. 
 
-We developed a Convolutional Neural Network (CNN) model trained on the PlantVillage dataset, capable of classifying 13 disease categories across potato and tomato plants. The system achieves over 95% accuracy on validation data. Additionally, we implemented a complete web application with a FastAPI backend and React frontend, enabling farmers to upload leaf images and receive instant disease predictions with confidence scores. The deployed system demonstrates the practical applicability of deep learning in precision agriculture.
+We developed a Convolutional Neural Network (CNN) model trained on the PlantVillage dataset, capable of classifying 13 disease categories across potato and tomato plants. The system achieves 97.2% accuracy for potato and 89.6% for tomato on full dataset evaluation. Additionally, we implemented a complete web application with a FastAPI backend and React frontend, enabling farmers to upload leaf images and receive instant disease predictions with confidence scores. The deployed system demonstrates the practical applicability of deep learning in precision agriculture.
 
 Keywords: Deep Learning, Convolutional Neural Networks, Plant Disease Classification, Computer Vision, Agricultural AI, TensorFlow
 
@@ -30,7 +30,7 @@ Recent advances in deep learning, particularly Convolutional Neural Networks (CN
 This project develops an end-to-end plant disease classification system that accurately identifies diseases in potato and tomato leaves from images. The system combines a trained CNN model with a user-friendly web interface, making it accessible to farmers without specialized technical knowledge.
 
 Key Contributions:
-• CNN model achieving over 95% accuracy on 13 disease classes
+• CNN model achieving 97.2% (potato) and 89.6% (tomato) accuracy on 13 disease classes
 • Data augmentation techniques for improved model generalization
 • Complete web application for real-time disease prediction
 • Deployment using modern technologies (FastAPI, React)
@@ -327,12 +327,12 @@ Software: Python 3.10, TensorFlow 2.10.1, CUDA 11.2
 -----------
 Model Performance Summary:
 
-+----------+------------+----------+---------+
-| Model    | Train Acc  | Val Acc  | Classes |
-+----------+------------+----------+---------+
-| Potato   | 98.2%      | 96.5%    | 3       |
-| Tomato   | 95.8%      | 92.3%    | 10      |
-+----------+------------+----------+---------+
++----------+------------+----------+------------------+---------+
+| Model    | Train Acc  | Val Acc  | Full Dataset Acc | Classes |
++----------+------------+----------+------------------+---------+
+| Potato   | 98.2%      | 96.5%    | 97.2%            | 3       |
+| Tomato   | 95.8%      | 92.3%    | 89.6%            | 10      |
++----------+------------+----------+------------------+---------+
 
 The training curves showed consistent improvement with minimal overfitting, demonstrating effective data augmentation.
 
@@ -343,7 +343,7 @@ The training curves showed consistent improvement with minimal overfitting, demo
 The experimental results confirm CNN effectiveness for plant disease classification:
 
 Performance Analysis:
-The potato model (96.5%) outperformed tomato (92.3%) due to fewer classes (3 vs 10), making classification inherently easier.
+The potato model (97.2% on full dataset) outperformed tomato (89.6%) due to fewer classes (3 vs 10), making classification inherently easier.
 
 Data Augmentation Impact:
 Without augmentation, validation accuracy plateaued at ~80%. Augmentation improved it by 12-15%.
@@ -362,7 +362,7 @@ Limitations:
 6. CONCLUSION AND FUTURE WORK
 ==========================================================
 
-This project successfully developed a deep learning-based plant disease classification system achieving over 95% accuracy.
+This project successfully developed a deep learning-based plant disease classification system achieving 97.2% accuracy for potato and 89.6% for tomato disease classification.
 
 Key Achievements:
 • Trained CNN models for 13 disease classes

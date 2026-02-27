@@ -222,10 +222,10 @@ This means `saved_models/tomato/2/` is missing. The app will still work for pota
 | **Architecture** | CNN (6 Conv2D layers) | CNN (6 Conv2D layers) |
 | **Input Size** | 256 × 256 px | 256 × 256 px |
 | **Classes** | 3 | 10 |
-| **Test Accuracy** | ~99% | ~89% |
+| **Test Accuracy** | 97.2% | 89.6% |
 | **Framework** | TensorFlow 2.10 | TensorFlow 2.10 |
 | **Training Epochs** | 50 | 50 |
-| **Dataset** | PlantVillage | PlantVillage |
+| **Dataset** | PlantVillage (2,152 images) | PlantVillage (16,011 images) |
 
 ---
 
