@@ -41,3 +41,15 @@ Thumbs.db
 
 # Build outputs
 frontend/build/
+
+# Training datasets (too large for GitHub)
+Training/PlantVillage/
+Training/TomatoData/
+Training/dataset/
+
+# Google Drive temp files
+.tmp.driveupload/
+.tmp.drivedownload/
+
+# Docker
+.dockerignore

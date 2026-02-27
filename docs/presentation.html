@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeafScan AI — Project Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0f172a; color: #fff; overflow: hidden; }
+
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 60px 80px;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.active { display: flex; }
+
+  /* Slide 1: Title */
+  .slide-title {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+    align-items: center;
+    text-align: center;
+  }
+  .slide-title .emoji { font-size: 80px; margin-bottom: 20px; }
+  .slide-title h1 {
+    font-size: 64px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .slide-title .subtitle { font-size: 24px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
+  .slide-title .author { font-size: 20px; color: rgba(255,255,255,0.5); }
+  .slide-title .author span { color: #10b981; font-weight: 600; }
+
+  /* Slide 2: Problem */
+  .slide-problem { background: linear-gradient(135deg, #0f172a, #1a1a2e); }
+  .slide-problem h2 { font-size: 48px; color: #ef4444; margin-bottom: 40px; }
+  .slide-problem .stats {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+  }
+  .stat-card .number { font-size: 48px; font-weight: 800; color: #ef4444; }
+  .stat-card .label { font-size: 16px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .solution {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 16px;
+    padding: 24px 32px;
+    font-size: 22px;
+    color: #34d399;
+  }
+  .solution strong { color: #10b981; }
+
+  /* Slide 3: Architecture */
+  .slide-arch { background: linear-gradient(135deg, #0f172a, #162032); }
+  .slide-arch h2 { font-size: 44px; margin-bottom: 40px; }
+  .slide-arch h2 span { color: #10b981; }
+  .arch-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .arch-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    min-width: 180px;
+  }
+  .arch-box .icon { font-size: 40px; margin-bottom: 8px; }
+  .arch-box .name { font-size: 18px; font-weight: 700; color: #fff; }
+  .arch-box .tech { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+  .arch-box.highlight { border-color: #10b981; background: rgba(16,185,129,0.1); }
+  .arch-arrow { font-size: 28px; color: #10b981; }
+  .models-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  .model-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px 30px;
+    text-align: center;
+  }
+  .model-card .acc { font-size: 36px; font-weight: 800; }
+  .model-card:first-child .acc { color: #10b981; }
+  .model-card:last-child .acc { color: #f59e0b; }
+
+  /* Slide 4: Model Details */
+  .slide-model { background: linear-gradient(135deg, #0f172a, #1a2744); }
+  .slide-model h2 { font-size: 44px; margin-bottom: 30px; }
+  .slide-model h2 span { color: #10b981; }
+  .cnn-layers {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 30px 0;
+  }
+  .layer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .layer-block {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    padding: 8px 12px;
+  }
+  .layer-block.pool { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .layer-block.dense { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .layer-block.drop { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .layer-block.output { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .layer-label { font-size: 10px; color: rgba(255,255,255,0.5); }
+  .training-info {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .info-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+  }
+  .info-pill strong { color: #10b981; }
+
+  /* Slide 5: Results */
+  .slide-results { background: linear-gradient(135deg, #0f172a, #1e3322); }
+  .slide-results h2 { font-size: 44px; margin-bottom: 40px; }
+  .slide-results h2 span { color: #10b981; }
+  .results-grid {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+  }
+  .result-box {
+    flex: 1;
+    max-width: 400px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 30px;
+  }
+  .result-box h3 { font-size: 24px; margin-bottom: 20px; }
+  .result-box .emoji-title { font-size: 36px; margin-bottom: 10px; }
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 15px;
+  }
+  .metric-row .label { color: rgba(255,255,255,0.6); }
+  .metric-row .value { font-weight: 700; color: #10b981; }
+  .insight {
+    margin-top: 30px;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 15px;
+    color: #fbbf24;
+  }
+  .insight strong { color: #f59e0b; }
+
+  /* Slide 6: Demo */
+  .slide-demo {
+    background: linear-gradient(135deg, #0f172a, #1a2744);
+    align-items: center;
+    text-align: center;
+  }
+  .slide-demo h2 { font-size: 52px; margin-bottom: 16px; }
+  .slide-demo h2 span { color: #10b981; }
+  .slide-demo .sub { font-size: 22px; color: rgba(255,255,255,0.5); margin-bottom: 40px; }
+  .demo-steps { display: flex; gap: 24px; }
+  .demo-step {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px;
+    width: 200px;
+    text-align: center;
+  }
+  .demo-step .step-num { font-size: 14px; color: #10b981; font-weight: 700; margin-bottom: 8px; }
+  .demo-step .step-icon { font-size: 40px; margin-bottom: 10px; }
+  .demo-step .step-text { font-size: 14px; color: rgba(255,255,255,0.7); }
+
+  /* Slide 7: Future */
+  .slide-future { background: linear-gradient(135deg, #0f172a, #2d1b4e); }
+  .slide-future h2 { font-size: 44px; margin-bottom: 40px; }
+  .slide-future h2 span { color: #a78bfa; }
+  .future-grid { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+  .future-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px;
+    width: 260px;
+  }
+  .future-card .icon { font-size: 36px; margin-bottom: 10px; }
+  .future-card h4 { font-size: 18px; margin-bottom: 8px; }
+  .future-card p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+  /* Slide 8: Thank You */
+  .slide-thanks {
+    background: linear-gradient(135deg, #0f172a, #1e3a5f, #0f172a);
+    align-items: center;
+    text-align: center;
+  }
+  .slide-thanks .emoji { font-size: 80px; margin-bottom: 20px; }
+  .slide-thanks h2 {
+    font-size: 56px;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+  }
+  .slide-thanks .contact { font-size: 18px; color: rgba(255,255,255,0.5); margin-top: 20px; }
+  .slide-thanks .contact a { color: #10b981; text-decoration: none; }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+  }
+  .nav button {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: rgba(16, 185, 129, 0.3); border-color: #10b981; }
+  .slide-counter {
+    position: fixed;
+    bottom: 36px;
+    left: 40px;
+    color: rgba(255,255,255,0.3);
+    font-size: 14px;
+  }
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    transition: width 0.3s ease;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide slide-title active" id="slide-1">
+  <div class="emoji">🌿</div>
+  <h1>LeafScan AI</h1>
+  <div class="subtitle">Plant Disease Classification Using Deep Learning</div>
+  <div class="author">By <span>Ashutosh Yadav</span></div>
+  <div style="margin-top: 12px; color: rgba(255,255,255,0.35); font-size: 14px;">B.Sc. (Hons) Data Science & AI</div>
+</div>
+
+<!-- SLIDE 2: PROBLEM -->
+<div class="slide slide-problem" id="slide-2">
+  <h2>🚨 The Problem</h2>
+  <div class="stats">
+    <div class="stat-card">
+      <div class="number">$220B</div>
+      <div class="label">Annual crop losses worldwide from plant diseases</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">80%</div>
+      <div class="label">Of farmers lack access to plant pathology experts</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">⏰</div>
+      <div class="label">Early detection is critical — delays of days cause irreversible damage</div>
+    </div>
+  </div>
+  <div class="solution">
+    💡 <strong>Solution:</strong> An AI-powered tool that instantly detects plant diseases from a simple photo — accessible to any farmer with a phone.
+  </div>
+</div>
+
+<!-- SLIDE 3: ARCHITECTURE -->
+<div class="slide slide-arch" id="slide-3">
+  <h2>🏗️ System <span>Architecture</span></h2>
+  <div class="arch-flow">
+    <div class="arch-box">
+      <div class="icon">👤</div>
+      <div class="name">User</div>
+      <div class="tech">Uploads leaf photo</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box highlight">
+      <div class="icon">⚛️</div>
+      <div class="name">React Frontend</div>
+      <div class="tech">Material UI · Drag & Drop</div>
+      <div class="tech" style="color: #10b981;">localhost:3000</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box highlight">
+      <div class="icon">🐍</div>
+      <div class="name">FastAPI Backend</div>
+      <div class="tech">REST API · Image Processing</div>
+      <div class="tech" style="color: #10b981;">localhost:8000</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box">
+      <div class="icon">🧠</div>
+      <div class="name">CNN Models</div>
+      <div class="tech">TensorFlow · Keras</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box">
+      <div class="icon">📊</div>
+      <div class="name">Result</div>
+      <div class="tech">Disease + Confidence %</div>
+    </div>
+  </div>
+  <div class="models-row">
+    <div class="model-card">
+      <div style="font-size: 28px; margin-bottom: 6px;">🥔</div>
+      <div style="font-weight: 700;">Potato Model</div>
+      <div class="acc">99%</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.5);">3 classes · 50 epochs</div>
+    </div>
+    <div class="model-card">
+      <div style="font-size: 28px; margin-bottom: 6px;">🍅</div>
+      <div style="font-weight: 700;">Tomato Model</div>
+      <div class="acc">89%</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.5);">10 classes · 50 epochs</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: MODEL -->
+<div class="slide slide-model" id="slide-4">
+  <h2>🧠 CNN Model <span>Architecture</span></h2>
+  <div class="cnn-layers">
+    <div class="layer"><div class="layer-block">Conv2D 32</div><div class="layer-label">3×3</div></div>
+    <div class="layer"><div class="layer-block pool">MaxPool</div><div class="layer-label">2×2</div></div>
+    <div class="layer"><div class="layer-block">Conv2D 64</div><div class="layer-label">3×3</div></div>
+    <div class="layer"><div class="layer-block pool">MaxPool</div><div class="layer-label">2×2</div></div>
+    <div class="layer"><div class="layer-block">Conv2D 64</div><div class="layer-label">3×3</div></div>
+    <div class="layer"><div class="layer-block pool">MaxPool</div><div class="layer-label">2×2</div></div>
+    <div class="layer"><div class="layer-block">Conv2D 64</div><div class="layer-label">3×3</div></div>
+    <div class="layer"><div class="layer-block pool">MaxPool</div><div class="layer-label">2×2</div></div>
+    <div class="layer"><div class="layer-block">Conv2D 64</div><div class="layer-label">3×3</div></div>
+    <div class="layer"><div class="layer-block pool">MaxPool</div><div class="layer-label">2×2</div></div>
+    <div class="layer"><div class="layer-block">Conv2D 64</div><div class="layer-label">3×3</div></div>
+    <div class="layer"><div class="layer-block pool">MaxPool</div><div class="layer-label">2×2</div></div>
+    <div style="color: #10b981; font-size: 20px; padding: 0 8px;">→</div>
+    <div class="layer"><div class="layer-block" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">Flatten</div></div>
+    <div class="layer"><div class="layer-block dense">Dense 64</div><div class="layer-label">ReLU</div></div>
+    <div class="layer"><div class="layer-block drop">Dropout</div><div class="layer-label">0.3</div></div>
+    <div class="layer"><div class="layer-block output">Softmax</div><div class="layer-label">Output</div></div>
+  </div>
+  <div class="training-info">
+    <div class="info-pill">📐 Input: <strong>256 × 256 × 3</strong></div>
+    <div class="info-pill">📦 Dataset: <strong>PlantVillage (16,000+ images)</strong></div>
+    <div class="info-pill">🔄 Augmentation: <strong>Flip, Rotate, Zoom, Contrast</strong></div>
+    <div class="info-pill">⚙️ Optimizer: <strong>Adam</strong></div>
+    <div class="info-pill">🏋️ Epochs: <strong>50</strong></div>
+  </div>
+</div>
+
+<!-- SLIDE 5: RESULTS -->
+<div class="slide slide-results" id="slide-5">
+  <h2>📊 Training <span>Results</span></h2>
+  <div class="results-grid">
+    <div class="result-box">
+      <div class="emoji-title">🥔</div>
+      <h3>Potato Model</h3>
+      <div class="metric-row"><span class="label">Training Accuracy</span><span class="value">99.2%</span></div>
+      <div class="metric-row"><span class="label">Validation Accuracy</span><span class="value">98.7%</span></div>
+      <div class="metric-row"><span class="label">Test Accuracy</span><span class="value" style="font-size: 20px;">~99%</span></div>
+      <div class="metric-row"><span class="label">Classes</span><span class="value">3</span></div>
+    </div>
+    <div class="result-box">
+      <div class="emoji-title">🍅</div>
+      <h3>Tomato Model</h3>
+      <div class="metric-row"><span class="label">Training Accuracy</span><span class="value">96.1%</span></div>
+      <div class="metric-row"><span class="label">Validation Accuracy</span><span class="value">89.6%</span></div>
+      <div class="metric-row"><span class="label">Test Accuracy</span><span class="value" style="font-size: 20px;">88.85%</span></div>
+      <div class="metric-row"><span class="label">Classes</span><span class="value">10</span></div>
+    </div>
+  </div>
+  <div class="insight">
+    💡 <strong>Key Insight:</strong> The tomato model showed signs of overfitting after epoch 35 (best val_accuracy: 92.19%). Using <strong>EarlyStopping</strong> and <strong>ModelCheckpoint</strong> callbacks would capture the optimal model.
+  </div>
+</div>
+
+<!-- SLIDE 6: LIVE DEMO -->
+<div class="slide slide-demo" id="slide-6">
+  <h2>🎮 Live <span>Demo</span></h2>
+  <div class="sub">Switch to your browser and show the app in action</div>
+  <div class="demo-steps">
+    <div class="demo-step">
+      <div class="step-num">STEP 1</div>
+      <div class="step-icon">🥔</div>
+      <div class="step-text">Select Potato → Upload early blight sample</div>
+    </div>
+    <div class="demo-step">
+      <div class="step-num">STEP 2</div>
+      <div class="step-icon">🍅</div>
+      <div class="step-text">Switch to Tomato → Upload tomato leaf image</div>
+    </div>
+    <div class="demo-step">
+      <div class="step-num">STEP 3</div>
+      <div class="step-icon">✅</div>
+      <div class="step-text">Upload a healthy leaf → Confirm detection</div>
+    </div>
+    <div class="demo-step">
+      <div class="step-num">STEP 4</div>
+      <div class="step-icon">📋</div>
+      <div class="step-text">Show prediction history & API docs</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: FUTURE WORK -->
+<div class="slide slide-future" id="slide-7">
+  <h2>🚀 Future <span>Improvements</span></h2>
+  <div class="future-grid">
+    <div class="future-card">
+      <div class="icon">🛑</div>
+      <h4>EarlyStopping</h4>
+      <p>Prevent overfitting by automatically stopping training when validation accuracy plateaus.</p>
+    </div>
+    <div class="future-card">
+      <div class="icon">🏆</div>
+      <h4>Transfer Learning</h4>
+      <p>Use pre-trained models like ResNet50 or EfficientNet for potentially higher accuracy with less training time.</p>
+    </div>
+    <div class="future-card">
+      <div class="icon">📱</div>
+      <h4>Mobile App</h4>
+      <p>Convert the model to TensorFlow Lite for on-device inference on Android/iOS.</p>
+    </div>
+    <div class="future-card">
+      <div class="icon">🌱</div>
+      <h4>More Crops</h4>
+      <p>Extend to support rice, wheat, corn, and other crops using the full PlantVillage dataset.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: THANK YOU -->
+<div class="slide slide-thanks" id="slide-8">
+  <div class="emoji">🙏</div>
+  <h2>Thank You!</h2>
+  <div style="font-size: 20px; color: rgba(255,255,255,0.6);">Questions?</div>
+  <div class="contact">
+    <br>Ashutosh Yadav<br>
+    <a href="https://github.com/Ashutosh-yadav0001">github.com/Ashutosh-yadav0001</a>
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button onclick="navigate(-1)">← Prev</button>
+  <button onclick="navigate(1)">Next →</button>
+</div>
+<div class="slide-counter" id="counter">1 / 8</div>
+
+<script>
+  let current = 1;
+  const total = 8;
+
+  function navigate(dir) {
+    const next = current + dir;
+    if (next < 1 || next > total) return;
+
+    document.getElementById(`slide-${current}`).classList.remove('active');
+    current = next;
+    document.getElementById(`slide-${current}`).classList.add('active');
+    document.getElementById('counter').textContent = `${current} / ${total}`;
+    document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') navigate(1);
+    if (e.key === 'ArrowLeft') navigate(-1);
+  });
+
+  // Initialize progress bar
+  document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
