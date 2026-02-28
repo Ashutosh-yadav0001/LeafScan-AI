@@ -47,6 +47,9 @@ Training/PlantVillage/
 Training/TomatoData/
 Training/dataset/
 
+# Large model files
+*.h5
+
 # Google Drive temp files
 .tmp.driveupload/
 .tmp.drivedownload/

@@ -71,7 +71,7 @@ source venv/bin/activate
 ### 3. Install Python Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
 This installs: TensorFlow, FastAPI, Uvicorn, Pillow, NumPy, etc.
@@ -81,7 +81,7 @@ This installs: TensorFlow, FastAPI, Uvicorn, Pillow, NumPy, etc.
 Open a terminal and run:
 
 ```bash
-cd API
+cd backend
 python main.py
 ```
 
@@ -130,15 +130,19 @@ You can test the API directly from the browser using the Swagger UI.
 ```
 Pototo-disease/
 │
-├── API/                          # Backend server
+├── backend/                      # Backend API server
 │   ├── main.py                   # FastAPI app — loads models, handles predictions
+│   ├── Dockerfile                # Docker support for backend
+│   ├── requirements.txt          # Python dependencies
 │   └── README.md                 # API-specific documentation
 │
 ├── frontend/                     # React web application
 │   ├── src/
 │   │   ├── home.js               # Main page with upload, prediction, history
+│   │   ├── App.js                # App root component
 │   │   ├── index.js              # App entry point
 │   │   └── index.css             # Global styles
+│   ├── Dockerfile                # Docker support for frontend
 │   └── package.json              # Node.js dependencies
 │
 ├── Training/                     # Model training notebooks
@@ -147,19 +151,14 @@ Pototo-disease/
 │   └── PlantVillage/             # Training dataset (not included in repo)
 │
 ├── saved_models/                 # Trained model weights
-│   ├── 1/                        # Potato model (SavedModel format)
+│   ├── potato/                   # Potato model (SavedModel format)
 │   └── tomato/2/                 # Tomato model (SavedModel format)
 │
 ├── sample_images/                # Test images for quick testing
-│   ├── early_blight_sample.jpg
-│   ├── healthy_sample.jpg
-│   └── late_blight_sample.jpg
 │
 ├── docs/                         # Additional documentation
 │   └── GPU_SETUP_NOTES.txt       # GPU/CUDA setup reference
 │
-├── requirements.txt              # Python dependencies
-├── Dockerfile                    # Docker support for backend
 ├── docker-compose.yml            # Docker Compose for full stack
 └── .gitignore
 ```
@@ -210,7 +209,7 @@ This means `saved_models/tomato/2/` is missing. The app will still work for pota
 
 ### Frontend can't connect to backend
 
-- Make sure the backend is running in a separate terminal (`python main.py`)
+- Make sure the backend is running in a separate terminal (`cd backend && python main.py`)
 - The frontend proxies API calls to `http://localhost:8000` (configured in `package.json`)
 
 ---

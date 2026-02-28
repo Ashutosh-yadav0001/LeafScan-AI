@@ -4,15 +4,17 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Install Python dependencies
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy API code and model
-COPY API/ ./API/
-COPY saved_models/ ./saved_models/
-COPY potatoes.h5 .
+# Copy backend code
+COPY backend/main.py ./backend/
+COPY backend/README.md ./backend/
 
-WORKDIR /app/API
+# Copy models
+COPY saved_models/ ./saved_models/
+
+WORKDIR /app/backend
 
 EXPOSE 8000
 

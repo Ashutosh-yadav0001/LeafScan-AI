@@ -27,12 +27,12 @@ app.add_middleware(
 print("Loading models...")
 
 # Potato model
-POTATO_MODEL_PATH = "../saved_models/1"
+POTATO_MODEL_PATH = "../saved_models/potato"
 if os.path.exists(POTATO_MODEL_PATH):
     POTATO_MODEL = tf.keras.models.load_model(POTATO_MODEL_PATH)
     print("✅ Potato model loaded from SavedModel")
 else:
-    POTATO_MODEL = tf.keras.models.load_model("../Training/potatoes.h5")
+    POTATO_MODEL = tf.keras.models.load_model("../potatoes.h5")
     print("✅ Potato model loaded from .h5 file")
 
 # Tomato model

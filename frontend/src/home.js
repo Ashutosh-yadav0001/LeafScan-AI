@@ -458,7 +458,7 @@ export const ImageUpload = () => {
                   >
                     <Typography sx={{ fontSize: "3rem", mb: 1 }}>🍃</Typography>
                     <Typography sx={{ color: "#ef4444", fontSize: "1.25rem", fontWeight: 600 }}>
-                      Not a Potato Leaf
+                      Not a {plantType === "potato" ? "Potato" : "Tomato"} Leaf
                     </Typography>
                     <Typography sx={{ color: "rgba(255,255,255,0.7)", mt: 1 }}>{error}</Typography>
                   </Box>
