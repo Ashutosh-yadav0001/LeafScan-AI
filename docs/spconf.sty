@@ -1,0 +1,109 @@
+% SPCONF.STY - LaTeX style file for IEEE Signal Processing Society conferences
+% Based on the standard IEEE conference template
+
+\typeout{-- SPCONF.STY style for IEEE Signal Processing conferences --}
+
+% Page layout
+\oddsidemargin  -0.31in
+\evensidemargin -0.31in
+\topmargin      0truept
+\headheight     0truept
+\headsep        0truept
+\footskip       0truept
+\textheight     229truemm
+\textwidth      178truemm
+
+\twocolumn
+\columnsep      6truemm
+\pagestyle{empty}
+
+% Fonts
+\def\ninept{\def\baselinestretch{0.95}\let\normalsize\small\normalsize}
+
+% Title
+\def\maketitle{\par
+ \begingroup
+ \def\thefootnote{}
+ \def\@makefnmark{\hbox
+ to 0pt{$^{\@thefnmark}$\hss}}
+ \if@twocolumn
+ \twocolumn[\@maketitle]
+ \else \newpage
+ \global\@topnum\z@ \@maketitle \fi
+ \@thanks
+ \endgroup
+ \setcounter{footnote}{0}
+ \let\maketitle\relax
+ \let\@maketitle\relax
+ \gdef\thefootnote{\arabic{footnote}}
+ \gdef\@@savethanks{}
+ \gdef\@thanks{}
+ \gdef\@author{}
+ \gdef\@title{}
+ \let\thanks\relax}
+
+\def\@maketitle{\newpage
+ \null
+ \vskip 1em
+ \begin{center}
+ {\large \bf \@title \par}
+ \vskip 1.5em
+ {\large \lineskip .5em
+ \begin{tabular}[t]{c}\@name \\ \\
+ \@address
+ \end{tabular}\par}
+ \end{center}
+ \par
+ \vskip 1.5em}
+
+\def\title#1{\gdef\@title{#1}}
+\def\name#1{\gdef\@name{#1\\}}
+\def\address#1{\gdef\@address{#1}}
+\gdef\@title{Title}
+\gdef\@name{Name}
+\gdef\@address{Address}
+
+% Abstract
+\def\abstract{\begin{center}
+{\bf ABSTRACT\vspace{-.5em}\vspace{0pt}}
+\end{center}}
+\def\endabstract{\par}
+
+% Keywords
+\def\keywords{\vskip .5em
+{\bfseries\textit{Index Terms}---\ }}
+\def\endkeywords{\par}
+
+% Section headings
+\setcounter{secnumdepth}{3}
+
+\def\section{\@startsection{section}{1}{\z@}
+  {-1.5ex plus -0.5ex minus -.2ex}
+  {1ex plus 0.3ex minus .2ex}
+  {\large\bf\centering}}
+
+\def\subsection{\@startsection{subsection}{2}{\z@}
+  {-1.2ex plus -0.4ex minus -.2ex}
+  {0.8ex plus .2ex}
+  {\normalsize\bf}}
+
+\def\subsubsection{\@startsection{subsubsection}{3}{\parindent}
+  {-1ex plus -0.3ex minus -.2ex}
+  {0.5ex plus .2ex}
+  {\normalsize\it}}
+
+% Footnotes
+\def\footnoterule{\kern-3\p@
+  \hrule width .4\columnwidth
+  \kern 2.6\p@}
+\setcounter{footnote}{0}
+
+% References
+\def\thebibliography#1{\section{References}\list
+ {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+ \advance\leftmargin\labelsep
+ \usecounter{enumi}}
+ \def\newblock{\hskip .11em plus .33em minus .07em}
+ \sloppy\clubpenalty4000\widowpenalty4000
+ \sfcode`\.=1000\relax}
+\let\endthebibliography=\endlist
