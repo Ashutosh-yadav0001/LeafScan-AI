@@ -35,4 +35,13 @@ CUDA: 11.2
 cuDNN: 8.9
 TensorFlow: 2.10.1
 
+
+ADDITIONAL NOTES:
+-----------------
+- TensorFlow 2.16+ requires CUDA 12.3+ and cuDNN 8.9+
+- For CPU-only usage, no GPU setup is needed — TensorFlow will auto-detect
+- Always check compatibility: https://www.tensorflow.org/install/source#gpu
+
+Last Updated: March 2026
+
 ================================================================================

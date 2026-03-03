@@ -1,5 +1,10 @@
 # 🌿 LeafScan AI — Plant Disease Detection
 
+![Python](https://img.shields.io/badge/Python-3.8--3.10-blue?logo=python)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.10-orange?logo=tensorflow)
+![License](https://img.shields.io/badge/License-MIT-green)
+![React](https://img.shields.io/badge/React-18-61dafb?logo=react)
+
 A full-stack web application that uses Deep Learning (CNN) to detect diseases in **Potato** and **Tomato** leaves from a simple photo upload.
 
 > Built with TensorFlow, FastAPI, and React.
